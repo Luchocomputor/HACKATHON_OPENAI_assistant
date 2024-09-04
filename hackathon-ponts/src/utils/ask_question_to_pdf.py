@@ -5,6 +5,7 @@ import openai
 from dotenv import load_dotenv
 from nltk.tokenize import sent_tokenize
 from openai import OpenAI
+
 client = OpenAI()
 
 load_dotenv()
@@ -94,23 +95,27 @@ Ma question préférée : qu'est-ce j'vais faire de tout cet oseille, huh ?
 Back to the Future
 """
 
-#question = "Donne moi la meilleure punchline de ce texte"
+# question = "Donne moi la meilleure punchline de ce texte"
 
-def gpt3_completion(question,text):
+
+def gpt3_completion(question, text):
     response = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-        #{"role": "system", "content": "You are a helpful assistant and you will answer according to the informations included in this text :" + chunks[0] },
-        {"role": "system", "content": "You MUST answer like TONY MONTANA " },
-        {"role": "user", "content": question},
-        #{"role": "assistant", "content": text},
-        #{"role": "user", "content": "Where was it played?"}        
-    ]
-)
-    return(response.choices[0].message.content)
+        model="gpt-4o-mini",
+        messages=[
+            # {"role": "system", "content": "You are a helpful assistant and you will answer according to the informations included in this text :" + chunks[0] },
+            {"role": "system", "content": "You MUST answer like TONY MONTANA "},
+            {"role": "user", "content": question},
+            # {"role": "assistant", "content": text},
+            # {"role": "user", "content": "Where was it played?"}
+        ],
+    )
+    return response.choices[0].message.content
+
 
 def ask_question_to_pdf(question):
-    return gpt3_completion(question,text)
+    return gpt3_completion(question, text)
+
+
 """""
 
 def gpt3_completion(question):
@@ -126,7 +131,8 @@ def gpt3_completion(question):
     return(response.choices[0].message.content)
 def ask_question_to_pdf(question):
     return gpt3_completion(question)
-"""""
+""" ""
+
 
 def open_file(filepath):
     with open(filepath, "r", encoding="utf-8") as infile:
@@ -189,5 +195,5 @@ def split_text(text, chunk_size=5000):
 filename = os.path.join(os.path.dirname(__file__), "filename.pdf")
 document = read_pdf(filename)
 chunks = split_text(document)
-#print(chunks[0])
-#print(ask_question_to_pdf(question))
+# print(chunks[0])
+# print(ask_question_to_pdf(question))
