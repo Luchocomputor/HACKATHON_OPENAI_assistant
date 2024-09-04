@@ -23,7 +23,7 @@ jobs:
     name: flake8 Lint
     runs-on: ubuntu-latest
     steps:
-       - name: Check out source repository
+      - name: Check out source repository
         uses: actions/checkout@v3
       - name: Set up Python environment
         uses: actions/setup-python@v4
