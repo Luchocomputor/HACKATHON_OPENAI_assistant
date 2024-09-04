@@ -1,0 +1,6 @@
+- name: Ensure no .env files are committed
+  run: |
+    if git ls-files | grep '.env'; then
+      echo ".env file found, please remove it!";
+      exit 1;
+    fi
