@@ -58,7 +58,7 @@ promptForm.addEventListener("submit", handlePrompt);
 const handleQuestionClick = async (event) => {
   appendAIMessage(async () => {
     const response = await fetch("/question", {
-      method: "POST",
+      method: "GET",
     });
     const result = await response.json();
     const question = result.answer;

@@ -1,0 +1,111 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+nav a.button {
+    background-color: #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+nav a.button:hover {
+    background-color: #555;
+}
+
+main {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="file"] {
+    width: 100%;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.progress-container {
+    margin-top: 20px;
+}
+
+.progress-container progress {
+    width: 100%;
+}
+
+.message {
+    margin-top: 20px;
+}
+
+.upload-button-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Adjust space between button and icon */
+}
+
+#upload-icon {
+    font-size: 24px;
+    /* Adjust size of the icon */
+    color: #4CAF50;
+    /* Icon color (green for success) */
+    display: none;
+    /* Initially hidden */
+}
+
+.button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
