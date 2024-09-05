@@ -1,5 +1,9 @@
-from flask import Flask, request, jsonify, render_template
-from src.utils.ask_question_to_pdf import ask_question_to_pdf
+from flask import Flask
+from flask import render_template
+from flask import request,jsonify
+from src.utils.ask_question_to_pdf import ask_question_to_pdf,gpt3_completion,open_file,read_pdf,split_text
+import openai
+import os
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -17,14 +21,16 @@ class UserPreference(db.Model):
 with app.app_context():
     db.create_all()
 
+filename = os.path.join(os.path.dirname(__file__), "filename.pdf")
+document = read_pdf(filename)
+chunks = split_text(document)
+
+course_content=chunks[0]
+
 
 @app.route("/")
-def index():
-    return render_template("index.html")
-
-
-
-
+def home(name=None):
+    return render_template('index.html')
 
 @app.route("/prompt", methods=["POST"])
 def prompt():
@@ -47,6 +53,8 @@ def set_preference():
     return jsonify({"message": "Preference saved"})
 
 
+
+
 @app.route("/get-preference", methods=["GET"])
 def get_preference():
     user_preference = UserPreference.query.first()  
@@ -58,7 +66,8 @@ def get_preference():
 @app.route('/question',methods=['POST'])
 def generate_question():
     course_content=chunks[0]
-    return {'answer':ask_question_to_pdf("Pose moi une question et dis moi si ma réponse est juste sur le cours suivant :" + course_content}
+    return {'answer':ask_question_to_pdf("Pose moi une question et dis moi si ma réponse est juste sur le cours suivant :" + course_content)}
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
+if __name__ == '__main__':
+    app.run(debug=True)      
