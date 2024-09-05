@@ -23,7 +23,7 @@ def index():
     return render_template("index.html")
 
 
-@app.route()
+
 
 
 @app.route("/prompt", methods=["POST"])
@@ -55,6 +55,10 @@ def get_preference():
     else:
         return jsonify({"dark_mode": False})
 
+@app.route('question',methods=['POST'])
+def generate_question():
+    course_content=chunks[0]
+    return {'answer':ask_question_to_pdf("Pose moi une question et dis moi si ma réponse est juste sur le cours suivant :" + course_content}
 
 if __name__ == "__main__":
     app.run(debug=True)
