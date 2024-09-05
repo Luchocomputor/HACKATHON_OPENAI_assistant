@@ -4,8 +4,9 @@ import fitz
 import openai
 from dotenv import load_dotenv
 from nltk.tokenize import sent_tokenize
+from openai import OpenAI
 
-load_dotenv()
+
 
 
 def open_file(filepath):
@@ -70,54 +71,21 @@ filename = os.path.join(os.path.dirname(__file__), "filename.pdf")
 document = read_pdf(filename)
 chunks = split_text(document)
 
-text = """Il était une fois, dans un joli jardin, un jardinier nommé Pierre
-qui avait une passion pour les plantes. Pierre était connu
-pour ses compétences exceptionnelles en jardinage.
-Dans son jardin, il possédait de nombreux outils, mais il avait
-un sécateur qu'il considérait comme son préféré. Ce sécateur avait
- été fabriqué avec soin et avait une lame tranchante et une prise ergonomique.
-Chaque jour, Pierre utilisait son sécateur pour tailler
-les rosiers, les buissons, et même les arbres fruitiers.
- Il avait d'autres outils, bien sûr, mais il préférait
-le sécateur pour sa précision et sa facilité d'utilisation.
-Il savait exactement comment l'utiliser pour obtenir les
-meilleurs résultats. Un jour, un voisin curieux, Thomas,
-vint lui rendre visite. Thomas observa Pierre en train de
-travailler et lui demanda :
-
-— "Pierre, pourquoi utilises-tu toujours ce sécateur,
-même quand il y a d'autres outils disponibles ?"
-
-Pierre sourit et répondit :
-
-— "Chaque outil a son usage spécifique, mais ce sécateur est
-comme une fonction préférée dans un programme. Il est particulièrement
-adapté pour les tâches de taille fine. Quand je l'utilise, je sais que
-je vais obtenir le meilleur résultat avec un minimum d'effort. C'est comme
-une fonction dans le code : elle est spécialement conçue pour faire un travail
-particulier de manière efficace."
-
-Thomas réfléchit à cela et comprit. Il se rendit compte que dans son propre
-jardin, il avait également des outils qui étaient plus adaptés à
-certaines tâches que d'autres."""
+text = chunks[0]
 
 
 def gpt3_completion(question):
-    # Appelle ChatCompletion de l'API OpenAI
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": "Using this text: " + text},
-            {"role": "user", "content": question},
-        ],
-    )
+    list.append({"role":"user","content":question})
+    response = client.chat.completions.create(model="gpt-3.5-turbo",messages=list)
+    answer= response.choices[0].message.content
+    list.append({"role":"assistant","content":answer})
+    return answer
 
-    # Extraction du texte de la réponse
-    return response.choices[0].message.content
+load_dotenv()
 
 
 # Exemple d'utilisation
-question = "resumes moi ça ?"
+question = "Résume ce texte"
 response = gpt3_completion(question)
 print(response)
 
