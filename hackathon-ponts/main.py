@@ -76,7 +76,7 @@ def get_preference():
 
 @app.route('/question',methods=['POST'])
 def generate_question():
-    return {'answer':ask_question_to_pdf("Pose moi une question sur le cours suivant puis après que l'utilisateur ait donné sa réponse dis lui si cette derniere est correcte :" + course_content)}
+    return {'answer':ask_question_to_pdf("Pose moi une question sur le cours suivant puis APRES que l'utilisateur ait donné sa réponse dis lui si cette derniere est correcte :" + course_content)}
 
 
 # Affichage du formulaire
