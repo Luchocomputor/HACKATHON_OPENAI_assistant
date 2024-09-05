@@ -84,6 +84,7 @@ def generate_question():
 
 @app.route("/upload-course", methods=["GET", "POST"])
 def upload_course():
+    global course_content  # Permet de modifier la variable globale
     if request.method == "POST":
         # Vérifie si un fichier est bien présent dans la requête
         if "file" not in request.files:
@@ -102,8 +103,15 @@ def upload_course():
             filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
             # Sauvegarde le fichier dans le répertoire configuré
             file.save(filepath)
-            # Redirige vers une page de confirmation ou affiche 
-            # un message de succès
+
+            # Lire et traiter le fichier PDF uploadé
+            document = read_pdf(filepath)
+            chunks = split_text(document)
+
+            # Mettre à jour la variable course_content avec le contenu du fichier uploadé
+            course_content = chunks[0]
+
+            # Redirige vers une page de confirmation ou affiche un message de succès
             return redirect(url_for("course_uploaded", filename=filename))
 
     return render_template("upload_course.html")
