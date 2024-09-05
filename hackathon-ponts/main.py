@@ -1,13 +1,15 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask import Flask
+from flask import render_template
+from flask import request,jsonify,redirect,url_for
 from src.utils.ask_question_to_pdf import ask_question_to_pdf,read_pdf,split_text
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.utils import secure_filename
+import openai
 import os
-
+from werkzeug.utils import secure_filename
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Configure le dossier d'upload
@@ -21,7 +23,6 @@ app.config["MAX_CONTENT_LENGTH"] = (
 if not os.path.exists(app.config["UPLOAD_FOLDER"]):
     os.makedirs(app.config["UPLOAD_FOLDER"])
 
-
 class UserPreference(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dark_mode = db.Column(db.Boolean, default=False)
@@ -31,11 +32,16 @@ class UserPreference(db.Model):
 with app.app_context():
     db.create_all()
 
+filename = os.path.join(os.path.dirname(__file__), "filename.pdf")
+document = read_pdf(filename)
+chunks = split_text(document)
+
+course_content=chunks[0]
+
 
 @app.route("/")
-def index():
-    return render_template("index.html")
-
+def home(name=None):
+    return render_template('index.html')
 
 @app.route("/prompt", methods=["POST"])
 def prompt():
@@ -44,14 +50,11 @@ def prompt():
     return response
 
 
-# Dark mode
-
-
 @app.route("/set-preference", methods=["POST"])
 def set_preference():
-    dark_mode = request.form.get("dark_mode") == "true"
+    dark_mode = request.form.get('dark_mode') == 'true'
     # Upsert the dark mode preference (insert or update)
-    user_preference = UserPreference.query.first()
+    user_preference = UserPreference.query.first()  
     if user_preference:
         user_preference.dark_mode = dark_mode
     else:
@@ -61,9 +64,11 @@ def set_preference():
     return jsonify({"message": "Preference saved"})
 
 
+
+
 @app.route("/get-preference", methods=["GET"])
 def get_preference():
-    user_preference = UserPreference.query.first()
+    user_preference = UserPreference.query.first()  
     if user_preference:
         return jsonify({"dark_mode": user_preference.dark_mode})
     else:
@@ -71,7 +76,7 @@ def get_preference():
 
 @app.route('/question',methods=['POST'])
 def generate_question():
-    return {'answer':ask_question_to_pdf("Pose moi une question et dis moi si ma réponse est juste sur le cours suivant :" + course_content)}
+    return {'answer':ask_question_to_pdf("Pose moi une question sur le cours suivant puis après que l'utilisateur ait donné sa réponse dis lui si cette derniere est correcte :" + course_content)}
 
 
 # Affichage du formulaire
@@ -111,6 +116,5 @@ def upload_course():
 def course_uploaded(filename):
     return f"Course '{filename}' uploaded successfully!"
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)      
