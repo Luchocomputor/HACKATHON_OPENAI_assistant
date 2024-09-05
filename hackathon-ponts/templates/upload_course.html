@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Course</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='upload.css') }}">
+    <!-- Include Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h1>Upload a New Course</h1>
+        <nav>
+            <a href="{{ url_for('index') }}" class="button">Back to Home</a>
+        </nav>
+    </header>
+
+    <main>
+        <form id="upload-form" action="{{ url_for('upload_course') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Select a file:</label>
+                <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.txt" required>
+            </div>
+            <div class="upload-button-container">
+                <button type="submit" class="button">Upload Course</button>
+                <span id="upload-icon" class="material-icons" style="display: none;">check_circle</span>
+            </div>
+            <div id="progress-container" class="progress-container" style="display: none;">
+                <label for="progress-bar">Upload Progress:</label>
+                <progress id="progress-bar" max="100" value="0"></progress>
+                <span id="progress-text">0%</span>
+            </div>
+        </form>
+        <div id="message" class="message"></div>
+    </main>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            var xhr = new XMLHttpRequest();
+            var progressBar = document.getElementById('progress-bar');
+            var progressText = document.getElementById('progress-text');
+            var messageDiv = document.getElementById('message');
+            var progressContainer = document.getElementById('progress-container');
+            var uploadIcon = document.getElementById('upload-icon');
+
+            xhr.open('POST', this.action, true);
+            xhr.upload.onprogress = function (event) {
+                if (event.lengthComputable) {
+                    var percentComplete = Math.round((event.loaded / event.total) * 100);
+                    progressBar.value = percentComplete;
+                    progressText.textContent = percentComplete + '%';
+                    progressContainer.style.display = 'block';
+                }
+            };
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    messageDiv.innerHTML = `
+                        <p>File uploaded successfully!</p>
+                        <p><a href="{{ url_for('upload_course') }}" class="button">Upload Another Course</a></p>
+                        <p><a href="{{ url_for('index') }}" class="button">Back to Home</a></p>
+                    `;
+                    uploadIcon.style.display = 'inline'; // Show the icon
+                } else {
+                    messageDiv.innerHTML = '<p>Failed to upload file. Please try again.</p>';
+                }
+                progressContainer.style.display = 'none';
+            };
+
+            xhr.send(formData);
+        });
+    </script>
+</body>
+
+</html>

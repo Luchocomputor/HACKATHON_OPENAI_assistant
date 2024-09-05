@@ -1,15 +1,25 @@
-from flask import Flask
-from flask import render_template
-from flask import request,jsonify
-from src.utils.ask_question_to_pdf import ask_question_to_pdf,gpt3_completion,open_file,read_pdf,split_text
-import openai
-import os
+from flask import Flask, request, jsonify, render_template, redirect, url_for
+from src.utils.ask_question_to_pdf import ask_question_to_pdf
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
+import os
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
+
+# Configure le dossier d'upload
+app.config["UPLOAD_FOLDER"] = "uploads/"
+# Nom du dossier pour stocker les fichiers
+app.config["MAX_CONTENT_LENGTH"] = (
+    16 * 1024 * 1024
+)  # Taille maximale de fichier acceptée (16 Mo)
+
+# S'assurer que le répertoire existe
+if not os.path.exists(app.config["UPLOAD_FOLDER"]):
+    os.makedirs(app.config["UPLOAD_FOLDER"])
 
 
 class UserPreference(db.Model):
@@ -21,16 +31,11 @@ class UserPreference(db.Model):
 with app.app_context():
     db.create_all()
 
-filename = os.path.join(os.path.dirname(__file__), "filename.pdf")
-document = read_pdf(filename)
-chunks = split_text(document)
-
-course_content=chunks[0]
-
 
 @app.route("/")
-def home(name=None):
-    return render_template('index.html')
+def index():
+    return render_template("index.html")
+
 
 @app.route("/prompt", methods=["POST"])
 def prompt():
@@ -39,11 +44,14 @@ def prompt():
     return response
 
 
+# Dark mode
+
+
 @app.route("/set-preference", methods=["POST"])
 def set_preference():
-    dark_mode = request.form.get('dark_mode') == 'true'
+    dark_mode = request.form.get("dark_mode") == "true"
     # Upsert the dark mode preference (insert or update)
-    user_preference = UserPreference.query.first()  
+    user_preference = UserPreference.query.first()
     if user_preference:
         user_preference.dark_mode = dark_mode
     else:
@@ -53,21 +61,52 @@ def set_preference():
     return jsonify({"message": "Preference saved"})
 
 
-
-
 @app.route("/get-preference", methods=["GET"])
 def get_preference():
-    user_preference = UserPreference.query.first()  
+    user_preference = UserPreference.query.first()
     if user_preference:
         return jsonify({"dark_mode": user_preference.dark_mode})
     else:
         return jsonify({"dark_mode": False})
 
-@app.route('/question',methods=['POST'])
-def generate_question():
-    course_content=chunks[0]
-    return {'answer':ask_question_to_pdf("Pose moi une question et dis moi si ma réponse est juste sur le cours suivant :" + course_content)}
+
+# Affichage du formulaire
 
 
-if __name__ == '__main__':
-    app.run(debug=True)      
+@app.route("/upload-course", methods=["GET", "POST"])
+def upload_course():
+    if request.method == "POST":
+        # Vérifie si un fichier est bien présent dans la requête
+        if "file" not in request.files:
+            return "No file part in the request", 400
+
+        file = request.files["file"]
+
+        # Vérifie si un fichier a été sélectionné
+        if file.filename == "":
+            return "No file selected", 400
+
+        if file:
+            # Sécurise le nom du fichier
+            filename = secure_filename(file.filename)
+            # Construit le chemin complet vers le dossier d'upload
+            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            # Sauvegarde le fichier dans le répertoire configuré
+            file.save(filepath)
+            # Redirige vers une page de confirmation ou affiche 
+            # un message de succès
+            return redirect(url_for("course_uploaded", filename=filename))
+
+    return render_template("upload_course.html")
+
+
+# Pour confirmer l'upload
+
+
+@app.route("/course-uploaded/<filename>")
+def course_uploaded(filename):
+    return f"Course '{filename}' uploaded successfully!"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
