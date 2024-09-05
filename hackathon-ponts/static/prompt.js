@@ -51,6 +51,10 @@ const handlePrompt = async (event) => {
     const result = await response.json();
     return result.answer;
   });
+
+  submitButton.innerHTML = "Envoyer";
+  questionButton.classList.remove("hidden");
+
 };
 
 promptForm.addEventListener("submit", handlePrompt);
