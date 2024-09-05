@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
-from src.utils.ask_question_to_pdf import ask_question_to_pdf
+from src.utils.ask_question_to_pdf import ask_question_to_pdf,read_pdf,split_text
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import os
@@ -68,6 +68,10 @@ def get_preference():
         return jsonify({"dark_mode": user_preference.dark_mode})
     else:
         return jsonify({"dark_mode": False})
+
+@app.route('/question',methods=['POST'])
+def generate_question():
+    return {'answer':ask_question_to_pdf("Pose moi une question et dis moi si ma réponse est juste sur le cours suivant :" + course_content)}
 
 
 # Affichage du formulaire
