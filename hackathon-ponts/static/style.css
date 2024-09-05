@@ -1,14 +1,23 @@
 :root {
-  --body-background-color: #f5f6f8;
-  --main-background-color: #ffffff;
-  --main-color: #2a303b;
-  --border-color: #cccccc;
-  --secondary-color: #fff6d3;
-  --button-background-color: #ffffff;
-  --button-color: #000000;
-  --header-background-color: #f1f1f1;
+  --body-background-color: #ece8e1;
+  /* Fond de page légèrement plus sombre */
+  --main-background-color: #d6cfc4;
+  /* Couleur de fond principale plus harmonieuse */
+  --main-color: #4a4032;
+  /* Couleur du texte principale plus contrastée */
+  --border-color: #b8a99a;
+  /* Couleur des bordures plus discrète */
+  --secondary-color: #d0bba4;
+  /* Couleur secondaire plus douce mais avec plus de contraste */
+  --button-background-color: #a68a6d;
+  /* Couleur des boutons plus foncée */
+  --button-color: #f2f2f2;
+  /* Couleur du texte des boutons plus claire */
+  --header-background-color: #a38f7b;
+  /* En-tête plus sombre mais harmonieuse */
   --loader-bullet-color: var(--main-color);
-  --max-body-width: 700px;
+  --max-body-width: 100%;
+  /* Toujours occuper toute la largeur */
   --loader-bullet-size: 6px;
 }
 
@@ -21,8 +30,16 @@ body.dark-mode {
   --secondary-color: #333333;
   --button-background-color: #444444;
   --button-color: #e0e0e0;
-  --header-background-color: #333333;
+  --header-background-color: #2c2c2c;
+  /* Ajusté à une couleur plus foncée */
   --loader-bullet-color: var(--main-color);
+}
+
+/* Styles pour le bouton en mode sombre */
+body.dark-mode .button:hover,
+body.dark-mode .button:active {
+  background-color: #1a1a1a;
+  /* Gris foncé pour le survol en mode sombre */
 }
 
 /* Global Styles */
@@ -34,7 +51,7 @@ body {
   background-color: var(--body-background-color);
   padding: 0;
   margin: 0;
-  font-family: sans-serif;
+  font-family: 'Consolas', sans-serif;
   color: var(--main-color);
 }
 
@@ -42,30 +59,62 @@ body {
   max-width: var(--max-body-width);
   min-height: 100vh;
   background-color: var(--main-background-color);
-  padding: 50px;
-  margin: 0 auto;
+  padding: 20px;
+  margin: 0px;
 }
 
 .header {
-  text-align: center;
+  display: flex;
+  align-items: center;
   background-color: var(--header-background-color);
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  /* Conserve le contexte de positionnement pour les éléments absolus */
+  justify-content: space-between;
+  /* Place les éléments aux extrémités */
+}
+
+.header-logo {
+  width: 120px;
+  height: auto;
 }
 
 .header-title {
-  margin-top: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 3em;
+  font-family: 'Consolas', sans-serif;
+  color: #3e2f26;
+  margin: 0;
+  white-space: nowrap;
+  /* Empêche le retour à la ligne du titre */
 }
+
+
+
+/* Dark Mode pour le titre */
+body.dark-mode .header-title {
+  color: #e0e0e0;
+  /* Couleur plus claire pour le mode sombre */
+}
+
 
 .messages-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .message {
   border: 1px solid var(--border-color);
   border-radius: 5px;
   padding: 10px 15px;
+  transition: background-color 0.3s;
 }
 
 .message-human {
@@ -74,41 +123,47 @@ body {
 
 .prompt-container {
   position: fixed;
-  bottom: 0px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: var(--max-body-width);
+  bottom: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 10px;
   background-color: var(--main-background-color);
   padding: 20px;
   border-top: 1px solid var(--border-color);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .prompt-label {
   font-weight: bold;
+  color: var(--main-color);
 }
 
 .prompt-input {
   flex-grow: 1;
   border: 1px solid var(--border-color);
   border-radius: 5px;
-  padding: 5px;
+  padding: 10px;
 }
 
 .button {
-  border: 1px solid var(--border-color);
-  padding: 5px;
+  border: none;
   border-radius: 5px;
+  padding: 10px 15px;
   background-color: var(--button-background-color);
   color: var(--button-color);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: 20px;
+  /* Ajuste l'espace entre le titre et le bouton */
 }
 
 .button:hover,
 .button:active {
-  background-color: var(--body-background-color);
-  cursor: pointer;
+  background-color: #8f735d;
+  /* Couleur au survol légèrement plus sombre */
 }
 
 .hidden {
@@ -157,6 +212,7 @@ body {
   0% {
     transform: scale(0);
   }
+
   100% {
     transform: scale(1);
   }
@@ -166,6 +222,7 @@ body {
   0% {
     transform: scale(1);
   }
+
   100% {
     transform: scale(0);
   }
@@ -175,6 +232,7 @@ body {
   0% {
     transform: translate(0, 0);
   }
+
   100% {
     transform: translate(calc(var(--loader-bullet-size) * 2), 0);
   }
