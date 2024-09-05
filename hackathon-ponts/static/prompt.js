@@ -38,7 +38,7 @@ const handlePrompt = async (event) => {
     data.append("question", questionButton.dataset.question);
     delete questionButton.dataset.question;
     questionButton.classList.remove("hidden");
-    submitButton.innerHTML = "Message";
+    submitButton.innerHTML = "Envoyer";
   }
 
   appendHumanMessage(data.get("prompt"));
@@ -62,22 +62,23 @@ promptForm.addEventListener("submit", handlePrompt);
 const handleQuestionClick = async (event) => {
   appendAIMessage(async () => {
     const response = await fetch("/question", {
-      method: "GET",
+      method: "POST",
     });
     const result = await response.json();
     const question = result.answer;
 
-    questionButton.dataset.question = question;
     questionButton.classList.add("hidden");
     submitButton.innerHTML = "Répondre à la question";
+
     return question;
   });
 };
 
 questionButton.addEventListener("click", handleQuestionClick);
+
 document.addEventListener('DOMContentLoaded', () => {
   const darkModeToggle = document.getElementById('dark-mode-toggle');
-  
+
   // Load the dark mode preference from local storage
   const darkModeEnabled = localStorage.getItem('dark-mode') === 'true';
   if (darkModeEnabled) {
@@ -89,4 +90,3 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('dark-mode', isDarkMode);
   });
 });
-
