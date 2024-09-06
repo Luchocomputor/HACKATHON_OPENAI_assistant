@@ -57,6 +57,7 @@ def read_pdf(filename):
             context += page_text
     return context
 
+
 def read_txt(filename):
     context = ""
 
@@ -68,6 +69,7 @@ def read_txt(filename):
             context += line.strip()
 
     return context
+
 
 filename = os.path.join(os.path.dirname(__file__), "filename.pdf")
 document = read_pdf(filename)

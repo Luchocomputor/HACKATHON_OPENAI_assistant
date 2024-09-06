@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask import request, jsonify, redirect, url_for
-from src.utils.ask_question_to_pdf import ask_question_to_pdf, read_pdf, split_text
+from src.utils.ask_question_to_pdf import ask_question_to_pdf, read_pdf, split_text, read_txt
 import os
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
