@@ -1,6 +1,6 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+on: [push,pull_request]
 
 jobs:
   my_first_job:
@@ -19,9 +19,9 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
-  my_second_job:
-    name: flake8 Lint
+  flake8-lint:
     runs-on: ubuntu-latest
+    name: Lint
     steps:
       - name: Check out source repository
         uses: actions/checkout@v3
@@ -31,6 +31,12 @@ jobs:
           python-version: "3.11"
       - name: flake8 Lint
         uses: py-actions/flake8@v2
+        with:
+          ignore: "F401"
+          exclude: "src/ignoreme.py"
+          max-line-length: "100"
+          path: "hackathon-ponts/src"
+          plugins: "flake8-bugbear==22.1.11 flake8-black"
 
         
 
