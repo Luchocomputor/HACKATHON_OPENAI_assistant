@@ -39,6 +39,11 @@ chunks = split_text(document)
 course_content = chunks[0]
 
 
+
+
+
+
+
 @app.route("/")
 def home(name=None):
     return render_template("index.html")
