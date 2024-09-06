@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from nltk.tokenize import sent_tokenize
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def split_text(text, chunk_size=5000):
