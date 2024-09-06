@@ -7,6 +7,8 @@ from nltk.tokenize import sent_tokenize
 from openai import OpenAI
 
 client = OpenAI()
+
+
 def split_text(text, chunk_size=5000):
     chunks = []
     current_chunk = StringIO()
@@ -34,6 +36,7 @@ def split_text(text, chunk_size=5000):
         chunks.append(current_chunk.getvalue())
     return chunks
 
+
 def read_pdf(filename):
     context = ""
 
@@ -54,20 +57,23 @@ def read_pdf(filename):
             context += page_text
     return context
 
+
 filename = os.path.join(os.path.dirname(__file__), "filename.pdf")
 document = read_pdf(filename)
 chunks = split_text(document)
 
-text=chunks[0]
-qst="Résume ce texte"
-list=[]
+text = chunks[0]
+qst = "Résume ce texte"
+list = []
+
 
 def gpt3_completion(question):
-    list.append({"role":"user","content":question})
-    response = client.chat.completions.create(model="gpt-3.5-turbo",messages=list)
-    answer= response.choices[0].message.content
-    list.append({"role":"assistant","content":answer})
+    list.append({"role": "user", "content": question})
+    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=list)
+    answer = response.choices[0].message.content
+    list.append({"role": "assistant", "content": answer})
     return answer
+
 
 load_dotenv()
 
@@ -81,18 +87,11 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 openai.organization = os.getenv("OPENAI_ORGANIZATION")
 
 
-
-
-
-
-
-
 # gpt3_completion(qst)
+
 
 def ask_question_to_pdf(question):
     return gpt3_completion(question)
-
-
 
 
 print(ask_question_to_pdf(qst))
