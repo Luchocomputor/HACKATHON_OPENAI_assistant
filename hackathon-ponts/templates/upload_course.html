@@ -1,39 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload Course</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='upload.css') }}">
-  <!-- Include Google Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-  <header>
-    <h1>Upload a New Course</h1>
-    <nav>
-      <a href="{{ url_for('home') }}" class="button">Back to Home</a>
-    </nav>
-  </header>
+  <main class="main-container">
+    <header class="header">
+      <h1 class="header-title">Upload a New Course</h1>
+      <nav>
+        <a href="{{ url_for('home') }}" class="button">Back to Home</a>
+      </nav>
+    </header>
 
-  <main>
-    <form id="upload-form" action="{{ url_for('upload_course') }}" method="POST" enctype="multipart/form-data">
-      <div class="form-group">
-        <label for="file">Select a file:</label>
-        <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.txt" required>
-      </div>
-      <div class="upload-button-container">
-        <button type="submit" class="button">Upload Course</button>
-        <span id="upload-icon" class="material-icons" style="display: none;">check_circle</span>
-      </div>
-      <div id="progress-container" class="progress-container" style="display: none;">
-        <label for="progress-bar">Upload Progress:</label>
-        <progress id="progress-bar" max="100" value="0"></progress>
-        <span id="progress-text">0%</span>
-      </div>
-    </form>
+    <section>
+      <form id="upload-form" action="{{ url_for('upload_course') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="file">Select a file:</label>
+          <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.txt" required>
+        </div>
+        <div class="upload-button-container">
+          <button type="submit" class="button">Upload Course</button>
+          <span id="upload-icon" class="material-icons" style="display: none;">check_circle</span>
+        </div>
+        <div id="progress-container" class="progress-container" style="display: none;">
+          <label for="progress-bar">Upload Progress:</label>
+          <progress id="progress-bar" max="100" value="0"></progress>
+          <span id="progress-text">0%</span>
+        </div>
+      </form>
+    </section>
+
     <div id="message" class="message"></div>
   </main>
 
