@@ -7,14 +7,16 @@
 </head>
 
 <body>
-  <!-- Lien stylisé en bouton -->
-  <a href="{{ url_for('upload_course') }}" class="button">Joindre un fichier de cours</a>
+  
 
   <main class="main-container">
     <header class="header">
       <img src="{{ url_for('static', filename='images/img.png') }}" alt="Logo" class="header-logo">
       <h1 class="header-title">Mon A.I.de mémoire</h1>
-      <button id="dark-mode-toggle" class="button">Dark Mode</button>
+      <div class="button-group">
+        <button id="dark-mode-toggle" class="button">Dark Mode</button>
+        <a href="{{ url_for('upload_course') }}" class="button">Joindre un fichier de cours</a>
+      </div>
     </header>
 
     <section id="messages-container" class="messages-container">

@@ -237,3 +237,9 @@ body.dark-mode .header-title {
     transform: translate(calc(var(--loader-bullet-size) * 2), 0);
   }
 }
+
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Ajoute de l'espace entre les deux boutons */
+}
