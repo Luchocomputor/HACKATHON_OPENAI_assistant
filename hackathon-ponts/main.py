@@ -109,9 +109,15 @@ def upload_course():
             # Sauvegarde le fichier dans le répertoire configuré
             file.save(filepath)
 
-            # Lire et traiter le fichier PDF uploadé
-            document = read_pdf(filepath)
-            chunks = split_text(document)
+            if filename.lower().endswith('.pdf'):
+                # Lire et traiter le fichier PDF uploadé
+                document = read_pdf(filepath)
+                chunks = split_text(document)
+
+            if filename.lower().endswith('.txt'):
+                # Lire et traiter le fichier PDF uploadé
+                document = read_txt(filepath)
+                chunks = split_text(document)
 
             # Mettre à jour la variable course_content avec le contenu du fichier uploadé
             course_content = chunks[0]
